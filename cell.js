@@ -21,12 +21,16 @@ export class Cell {
   }
 
   linkTileForMerge(tile) {
-    this.setXY(this.x, this.y);
-    this.linkTileForMerge = tile;
+    tile.setXY(this.x, this.y);
+    this.linkedTileForMerge = tile;
+  }
+
+  unlinkTileForMerge() {
+    this.linkedTileForMerge = null;
   }
 
   hasTileForMerge() {
-    return !!this.linkTileForMerge;
+    return !!this.linkedTileForMerge;
   }
 
   canAccept(newTile) {
@@ -34,5 +38,13 @@ export class Cell {
       this.isEmpty() ||
       (!this.hasTileForMerge() && this.linkedTile.value === newTile.value)
     );
+  }
+
+  mergeTiles() {
+    this.linkedTile.setValue(
+      this.linkedTile.value + this.linkedTileForMerge.value
+    );
+    this.linkedTileForMerge.removeFromDOM();
+    this.unlinkTileForMerge();
   }
 }
